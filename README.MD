@@ -1,4 +1,4 @@
-#Serialcode(生成并验证注册码)
+### Serialcode(生成并验证注册码)
 
 file_encoding: UTF-8
 
