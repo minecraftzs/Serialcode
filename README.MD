@@ -1,4 +1,5 @@
 ### Serialcode(生成并验证注册码)
+## 隶属于Grmine Alpha Encryption项目
 
 file_encoding: UTF-8
 
