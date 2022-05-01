@@ -13,7 +13,7 @@ import java.util.Scanner;
     开源仅供参考, 有疑问qq2669514718
 */
 public class Serialcode {
-    static String version = "1.0.0";//设置加密版本号(5位)
+    static String version = "1.0.1";//设置加密版本号(5位)
 
     public static String decryptedVersion(String version) {
         char[] decrypted = version.toCharArray();
@@ -38,12 +38,16 @@ public class Serialcode {
         String c = String.valueOf(encryptedVersion.charAt(2)).toUpperCase();
         String d = String.valueOf(encryptedVersion.charAt(3)).toUpperCase();
         String e = String.valueOf(encryptedVersion.charAt(4)).toUpperCase();
-        String f = "-";
-        return randomValue(1) + a + randomValue(1) + "E" + randomValue(1) + f +
-                randomValue(1) + b + randomValue(2) + c + f +
-                d + randomValue(3) + "A" + f +
-                randomValue(2) + "G" + e + randomValue(1);
-    }//生成注册码格式: XaXEX-XbXXc-dXXXA-XXGeX
+        String checkValue = randomCheckValue();
+        String f = String.valueOf(checkValue.charAt(0));
+        String g = String.valueOf(checkValue.charAt(1));
+        String h = String.valueOf(checkValue.charAt(2));
+        String i = "-";
+        return randomValue(1) + a + randomValue(1) + f + randomValue(1) + i +
+                randomValue(1) + b + randomValue(2) + c + i +
+                d + randomValue(3) + g + i +
+                randomValue(2) + h + e + randomValue(1);
+    }//生成注册码格式: XaXXX-XbXXc-dXXXX-XXXeX
 
     public static String serialcodeToVersion(String serialcode) {
         String a = String.valueOf(serialcode.charAt(1)).toLowerCase();
@@ -64,6 +68,33 @@ public class Serialcode {
         return new String(value);
     }//随机算法生成字符串
 
+    public static String randomCheckValue() {
+        String randomString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//字符表
+        String first, second, third;
+        int f, s, t;
+        do {
+            char[] a = new char[1];
+            for (int index = 0; index < a.length; ++index) {
+                a[index] = randomString.charAt(new SecureRandom().nextInt(randomString.length()));
+            }
+            first = new String(a);
+            f = first.charAt(0);
+            char[] b = new char[1];
+            for (int index = 0; index < b.length; ++index) {
+                b[index] = randomString.charAt(new SecureRandom().nextInt(randomString.length()));
+            }
+            second = new String(a);
+            s = second.charAt(0);
+            char[] c = new char[1];
+            for (int index = 0; index < c.length; ++index) {
+                c[index] = randomString.charAt(new SecureRandom().nextInt(randomString.length()));
+            }
+            third = new String(c);
+            t = third.charAt(0);
+        } while (!Integer.valueOf(f + s + t).equals(200));
+        return first + second + third;
+    }//随机算法生成验证值
+
     public static boolean checkSerialcode(String serialcode) {
         boolean result = false;
         if (serialcode.length() == 23) {
@@ -74,7 +105,7 @@ public class Serialcode {
             String e = String.valueOf(serialcode.charAt(11));
             String f = String.valueOf(serialcode.charAt(17));
             if (d.equals("-") && e.equals("-") && f.equals("-")) {
-                if ((a + b + c).equals("EAG")) {
+                if (Integer.valueOf(a.charAt(0) + b.charAt(0) + c.charAt(0)).equals(200)) {
                     if (serialcodeToVersion(serialcode).equals(version)) {
                         result = true;
                     }
